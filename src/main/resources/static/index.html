@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS and JQuery-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+    <title>Exprs Demo Application</title>
+</head>
+<p> To sort items, click on #id or price or popularity buttons:</p>
+<table id="products-table" class="table table-striped">
+  <thead>
+    <tr>
+        <th scope="col"><button type="button" class="btn btn-secondary" onclick="sortProductsOn('id')">#Id</button></th>
+        <th scope="col"><button type="button" class="btn btn-secondary">Title</button></th>
+        <th scope="col"><button type="button" class="btn btn-secondary">Sub Category</button></th>
+        <th scope="col"><button type="button" class="btn btn-secondary" onclick="sortProductsOn('price')">Price</button></th>
+        <th scope="col"><button type="button" class="btn btn-secondary" onclick="sortProductsOn('popularity')">Popularity</button></th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+
+    var products = new Array();
+
+
+    //sort with the help of stored data
+    function sortProductsOn(key) {
+        if(key == "id")
+    	    products.sort(function(a, b){return a.id - b.id})
+        else if(key == "price")
+    	    products.sort(function(a, b){return b.price - a.price})
+        else if(key == "popularity")
+    	    products.sort(function(a, b){return b.popularity - a.popularity})
+
+        $("#products-table tbody").empty();
+
+	    $(products).each( function(i, item) {
+	        $row = "<tr><th scope=\"row\">"+item.id+"</th><td>"+item.title+"</td><td>"+item.subCategory+"</td><td>"+item.price+"</td><td>"+item.popularity+"</td></tr>";
+	        $("#products-table tbody").append($row);
+	    });
+    }
+
+    $(function() {
+        $url = "/api/products/"
+        $.ajax({
+	        url: $url,
+	        type: "GET",
+	        dataType: 'json',
+	        success: function(data)
+	        {
+	            $(data).each( function(i, item) {
+	                products.push(item);
+	                $row = "<tr><th scope=\"row\">"+item.id+"</th><td>"+item.title+"</td><td>"+item.subCategory+"</td><td>"+item.price+"</td><td>"+item.popularity+"</td></tr>";
+	                $("#products-table tbody").append($row);
+	            });
+	        },
+	        error: function()
+	        {
+	            alert("Unable to fetch data from "+url);
+
+	        }
+        });
+
+    });
+</script>
+
+
+</body>
+</html>
